@@ -37,7 +37,7 @@ def get_user(user_id):
 def create_user():
     data = request.get_json()
     user = {
-        '_id': data['id'],
+        '_id': int(data['id']),
         'name': data['name'],
         'email': data['email'],
         'password': data['password']
