@@ -1,0 +1,10 @@
+# Flask app
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyi
+*.log
+
+# Virtual environment
+test/
