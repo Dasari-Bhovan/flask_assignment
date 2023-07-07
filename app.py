@@ -15,17 +15,10 @@ db = client['userdb']
 collection = db['users']
 
 
-class UserResource(Resource):
-    def get(self, user_id=None):
-        if user_id:
-            user = collection.find_one({'_id': user_id})
-            if user:
-                return user, 200
-            else:
-                return 'User not found', 404
-        else:
-            users = list(collection.find())
-            return users, 200
+class UsersResource(Resource):
+    def get(self):
+        users = list(collection.find())
+        return users, 200
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -47,6 +40,15 @@ class UserResource(Resource):
             return "User ID already exists. Please change the user ID.", 500
         return 'User created successfully', 201
 
+
+class UserResource(Resource):
+    def get(self, user_id):
+        user = collection.find_one({'_id': user_id})
+        if user:
+            return user, 200
+        else:
+            return 'User not found', 404
+
     def put(self, user_id):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
@@ -64,7 +66,6 @@ class UserResource(Resource):
             return 'User updated successfully', 200
         else:
             return 'User not found', 404
-
     def delete(self, user_id):
         result = collection.delete_one({'_id': user_id})
         if result.deleted_count > 0:
@@ -72,8 +73,16 @@ class UserResource(Resource):
         else:
             return 'User not found', 404
 
+class UserAgeResource(Resource):
+    def get(self, user_id, age):
+        # Handle logic for user_id and age combination
+        # return {'user_id': user_id, 'age': age}, 200
+        pass
 
-api.add_resource(UserResource, '/users', '/users/<int:user_id>')
+
+api.add_resource(UsersResource, '/users')
+api.add_resource(UserResource, '/users/<int:user_id>')
+api.add_resource(UserAgeResource, '/users/<int:user_id>/<int:age>')
 
 
 if __name__ == '__main__':
